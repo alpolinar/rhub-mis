@@ -1,23 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "{{business_components}}".
+ * This is the model class for table "{{swot_files}}".
  *
- * The followings are the available columns in table '{{business_components}}':
+ * The followings are the available columns in table '{{swot_files}}':
  * @property string $file_id
- * @property string $value_propositions
+ * @property string $child_file_id
+ * @property string $area_id
+ * @property string $description
  *
  * The followings are the available model relations:
  * @property Files $file
+ * @property Files $childFile
  */
-class BusinessComponents extends CActiveRecord
+class SwotFiles extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{business_components}}';
+		return '{{swot_files}}';
 	}
 
 	/**
@@ -28,12 +31,13 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_id', 'required'),
-			array('file_id', 'length', 'max'=>20),
-			array('value_propositions', 'safe'),
+			array('file_id, child_file_id, area_id', 'required'),
+			array('file_id, child_file_id', 'length', 'max'=>20),
+			array('area_id', 'length', 'max'=>10),
+			array('description', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, value_propositions', 'safe', 'on'=>'search'),
+			array('file_id, child_file_id, area_id, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -46,6 +50,7 @@ class BusinessComponents extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'file' => array(self::BELONGS_TO, 'Files', 'file_id'),
+			'childFile' => array(self::BELONGS_TO, 'Files', 'child_file_id'),
 		);
 	}
 
@@ -56,7 +61,9 @@ class BusinessComponents extends CActiveRecord
 	{
 		return array(
 			'file_id' => 'File',
-			'value_propositions' => 'Value Propositions',
+			'child_file_id' => 'Child File',
+			'area_id' => 'Area',
+			'description' => 'Description',
 		);
 	}
 
@@ -79,7 +86,9 @@ class BusinessComponents extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('value_propositions',$this->value_propositions,true);
+		$criteria->compare('child_file_id',$this->child_file_id,true);
+		$criteria->compare('area_id',$this->area_id,true);
+		$criteria->compare('description',$this->description,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -90,7 +99,7 @@ class BusinessComponents extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BusinessComponents the static model class
+	 * @return SwotFiles the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

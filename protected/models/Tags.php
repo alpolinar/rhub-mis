@@ -1,23 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "{{business_components}}".
+ * This is the model class for table "{{tags}}".
  *
- * The followings are the available columns in table '{{business_components}}':
- * @property string $file_id
- * @property string $value_propositions
+ * The followings are the available columns in table '{{tags}}':
+ * @property string $id
+ * @property string $tag_type_id
+ * @property string $tag
  *
  * The followings are the available model relations:
- * @property Files $file
+ * @property Files[] $misFiles
+ * @property SwotTags[] $swotTags
+ * @property TagTypes $tagType
  */
-class BusinessComponents extends CActiveRecord
+class Tags extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{business_components}}';
+		return '{{tags}}';
 	}
 
 	/**
@@ -28,12 +31,12 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_id', 'required'),
-			array('file_id', 'length', 'max'=>20),
-			array('value_propositions', 'safe'),
+			array('tag_type_id, tag', 'required'),
+			array('tag_type_id', 'length', 'max'=>20),
+			array('tag', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, value_propositions', 'safe', 'on'=>'search'),
+			array('id, tag_type_id, tag', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,7 +48,9 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'file' => array(self::BELONGS_TO, 'Files', 'file_id'),
+			'misFiles' => array(self::MANY_MANY, 'Files', '{{file_tags}}(tag_id, file_id)'),
+			'swotTags' => array(self::HAS_MANY, 'SwotTags', 'tag_id'),
+			'tagType' => array(self::BELONGS_TO, 'TagTypes', 'tag_type_id'),
 		);
 	}
 
@@ -55,8 +60,9 @@ class BusinessComponents extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'file_id' => 'File',
-			'value_propositions' => 'Value Propositions',
+			'id' => 'ID',
+			'tag_type_id' => 'Tag Type',
+			'tag' => 'Tag',
 		);
 	}
 
@@ -78,8 +84,9 @@ class BusinessComponents extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('value_propositions',$this->value_propositions,true);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('tag_type_id',$this->tag_type_id,true);
+		$criteria->compare('tag',$this->tag,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -90,7 +97,7 @@ class BusinessComponents extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BusinessComponents the static model class
+	 * @return Tags the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

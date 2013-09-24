@@ -1,23 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "{{business_components}}".
+ * This is the model class for table "{{user}}".
  *
- * The followings are the available columns in table '{{business_components}}':
- * @property string $file_id
- * @property string $value_propositions
+ * The followings are the available columns in table '{{user}}':
+ * @property string $id
+ * @property string $username
+ * @property string $password
+ * @property string $email
  *
  * The followings are the available model relations:
- * @property Files $file
+ * @property Files[] $files
  */
-class BusinessComponents extends CActiveRecord
+class User extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{business_components}}';
+		return '{{user}}';
 	}
 
 	/**
@@ -28,12 +30,11 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_id', 'required'),
-			array('file_id', 'length', 'max'=>20),
-			array('value_propositions', 'safe'),
+			array('username, password, email', 'required'),
+			array('username, password, email', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, value_propositions', 'safe', 'on'=>'search'),
+			array('id, username, password, email', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,7 +46,7 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'file' => array(self::BELONGS_TO, 'Files', 'file_id'),
+			'files' => array(self::HAS_MANY, 'Files', 'user_id'),
 		);
 	}
 
@@ -55,8 +56,10 @@ class BusinessComponents extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'file_id' => 'File',
-			'value_propositions' => 'Value Propositions',
+			'id' => 'ID',
+			'username' => 'Username',
+			'password' => 'Password',
+			'email' => 'Email',
 		);
 	}
 
@@ -78,8 +81,10 @@ class BusinessComponents extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('value_propositions',$this->value_propositions,true);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -90,7 +95,7 @@ class BusinessComponents extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BusinessComponents the static model class
+	 * @return User the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

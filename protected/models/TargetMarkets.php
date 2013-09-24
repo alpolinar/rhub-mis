@@ -1,23 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "{{business_components}}".
+ * This is the model class for table "{{target_markets}}".
  *
- * The followings are the available columns in table '{{business_components}}':
+ * The followings are the available columns in table '{{target_markets}}':
  * @property string $file_id
- * @property string $value_propositions
+ * @property string $target_market
  *
  * The followings are the available model relations:
  * @property Files $file
  */
-class BusinessComponents extends CActiveRecord
+class TargetMarkets extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{business_components}}';
+		return '{{target_markets}}';
 	}
 
 	/**
@@ -30,10 +30,10 @@ class BusinessComponents extends CActiveRecord
 		return array(
 			array('file_id', 'required'),
 			array('file_id', 'length', 'max'=>20),
-			array('value_propositions', 'safe'),
+			array('target_market', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, value_propositions', 'safe', 'on'=>'search'),
+			array('file_id, target_market', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +56,7 @@ class BusinessComponents extends CActiveRecord
 	{
 		return array(
 			'file_id' => 'File',
-			'value_propositions' => 'Value Propositions',
+			'target_market' => 'Target Market',
 		);
 	}
 
@@ -79,7 +79,7 @@ class BusinessComponents extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('value_propositions',$this->value_propositions,true);
+		$criteria->compare('target_market',$this->target_market,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -90,7 +90,7 @@ class BusinessComponents extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BusinessComponents the static model class
+	 * @return TargetMarkets the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

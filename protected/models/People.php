@@ -1,23 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "{{business_components}}".
+ * This is the model class for table "{{people}}".
  *
- * The followings are the available columns in table '{{business_components}}':
+ * The followings are the available columns in table '{{people}}':
  * @property string $file_id
- * @property string $value_propositions
+ * @property double $population
+ * @property integer $age_start
+ * @property integer $age_end
+ * @property string $country
+ * @property string $state
+ * @property string $city
+ * @property string $zip_code
  *
  * The followings are the available model relations:
  * @property Files $file
  */
-class BusinessComponents extends CActiveRecord
+class People extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{business_components}}';
+		return '{{people}}';
 	}
 
 	/**
@@ -28,12 +34,17 @@ class BusinessComponents extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_id', 'required'),
+			array('file_id, population, age_start, age_end, zip_code', 'required'),
+			array('age_start, age_end', 'numerical', 'integerOnly'=>true),
+			array('population', 'numerical'),
 			array('file_id', 'length', 'max'=>20),
-			array('value_propositions', 'safe'),
+			array('country', 'length', 'max'=>2),
+			array('state', 'length', 'max'=>5),
+			array('city', 'length', 'max'=>60),
+			array('zip_code', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, value_propositions', 'safe', 'on'=>'search'),
+			array('file_id, population, age_start, age_end, country, state, city, zip_code', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +67,13 @@ class BusinessComponents extends CActiveRecord
 	{
 		return array(
 			'file_id' => 'File',
-			'value_propositions' => 'Value Propositions',
+			'population' => 'Population',
+			'age_start' => 'Age Start',
+			'age_end' => 'Age End',
+			'country' => 'Country',
+			'state' => 'State',
+			'city' => 'City',
+			'zip_code' => 'Zip Code',
 		);
 	}
 
@@ -79,7 +96,13 @@ class BusinessComponents extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('value_propositions',$this->value_propositions,true);
+		$criteria->compare('population',$this->population);
+		$criteria->compare('age_start',$this->age_start);
+		$criteria->compare('age_end',$this->age_end);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('state',$this->state,true);
+		$criteria->compare('city',$this->city,true);
+		$criteria->compare('zip_code',$this->zip_code,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -90,7 +113,7 @@ class BusinessComponents extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BusinessComponents the static model class
+	 * @return People the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
