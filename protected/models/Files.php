@@ -154,13 +154,7 @@ class Files extends CActiveRecord
 		if (NULL === $this->user_id)
 			$this->user_id = 1;
 		
-		parent::beforeValidate();
-	}
-	
-	public function beforeSave()
-	{
 		$this->updated = date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
-		parent::beforeSave();
+		return parent::beforeValidate();
 	}
-
 }

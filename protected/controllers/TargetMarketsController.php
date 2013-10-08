@@ -63,17 +63,13 @@ class TargetMarketsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		//$model = $this->loadModel();
-		$model = new Files();
-		$model->targetMarkets = new TargetMarkets;
+		$model = $this->loadModel();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if (isset($_POST['Files'],$_POST['TargetMarkets'])) {
-			//$model->attributes = $_POST['Files'];
-			$model->save();
-//			if ($this->saveModel($model))
-//				$this->redirect(array('view', 'id' => $model->file_id));
+		if (isset($_POST['TargetMarkets'])) {
+			if ($this->saveModel($model))
+				$this->redirect(array('view', 'id' => $model->id));
 		}
 
 		$this->render('create', array(
@@ -95,7 +91,7 @@ class TargetMarketsController extends Controller
 
 		if (isset($_POST['Files'],$_POST['TargetMarkets'])) {
 			if ($this->saveModel($model))
-				$this->redirect(array('view', 'id' => $model->file_id));
+				$this->redirect(array('view', 'id' => $model->id));
 		}
 
 		$this->render('update', array(
@@ -180,8 +176,9 @@ class TargetMarketsController extends Controller
 	 * 
 	 * @param Files $model
 	 */
-	public function saveModel(&$model) {
+	public function saveModel($model) {
 		$model->attributes = $_POST['Files'];
+		$model->file_type_id = Files::FILE_TYPE_TARGET_MARKETS;
 		$model->targetMarkets->attributes = $_POST['TargetMarkets'];
 		$transaction = Yii::app()->db->beginTransaction();
 		
@@ -191,15 +188,13 @@ class TargetMarketsController extends Controller
 				if ($model->targetMarkets->save()) {
 					$transaction->commit();
 					return true;
-				} else {
-					$transaction->rollback();
 				}
 			}
 		} catch (CDbException $e) {
 			$transaction->rollback();
 			throw $e;
 		}
-		
+		$transaction->rollback();
 		return false;
 	}
 
