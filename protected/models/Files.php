@@ -29,6 +29,12 @@
  */
 class Files extends CActiveRecord
 {
+	const FILE_TYPE_PEOPLE = 1;
+	const FILE_TYPE_BUSINESS_COMPONENT = 2;
+	const FILE_TYPE_EXTERNAL_ENVIRONMENT = 3;
+	const FILE_TYPE_TARGET_MARKETS = 4;
+	const FILE_TYPE_SWOT = 5;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -45,14 +51,14 @@ class Files extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_type_id, updated, user_id', 'required'),
-			array('file_type_id', 'length', 'max'=>20),
-			array('name', 'length', 'max'=>70),
-			array('user_id', 'length', 'max'=>19),
+			array('file_type_id, updated, user_id, name', 'required'),
+			array('file_type_id', 'length', 'max' => 20),
+			array('name', 'length', 'max' => 70),
+			array('user_id', 'length', 'max' => 19),
 			array('description, start, end, created', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, file_type_id, name, description, start, end, created, updated, user_id', 'safe', 'on'=>'search'),
+			array('id, file_type_id, name, description, start, end, created, updated, user_id', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -112,20 +118,20 @@ class Files extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('file_type_id',$this->file_type_id,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('start',$this->start,true);
-		$criteria->compare('end',$this->end,true);
-		$criteria->compare('created',$this->created,true);
-		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('user_id',$this->user_id,true);
+		$criteria->compare('id', $this->id, true);
+		$criteria->compare('file_type_id', $this->file_type_id, true);
+		$criteria->compare('name', $this->name, true);
+		$criteria->compare('description', $this->description, true);
+		$criteria->compare('start', $this->start, true);
+		$criteria->compare('end', $this->end, true);
+		$criteria->compare('created', $this->created, true);
+		$criteria->compare('updated', $this->updated, true);
+		$criteria->compare('user_id', $this->user_id, true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
@@ -135,8 +141,26 @@ class Files extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return Files the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
+	
+	public function beforeValidate()
+	{
+		if ($this->isNewRecord && NULL === $this->created)
+			$this->created = date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
+		
+		if (NULL === $this->user_id)
+			$this->user_id = 1;
+		
+		parent::beforeValidate();
+	}
+	
+	public function beforeSave()
+	{
+		$this->updated = date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
+		parent::beforeSave();
+	}
+
 }

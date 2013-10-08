@@ -12,6 +12,7 @@
  */
 class TargetMarkets extends CActiveRecord
 {
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -29,11 +30,11 @@ class TargetMarkets extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('file_id', 'required'),
-			array('file_id', 'length', 'max'=>20),
+			array('file_id', 'length', 'max' => 20),
 			array('target_market', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, target_market', 'safe', 'on'=>'search'),
+			array('file_id, target_market', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -76,13 +77,13 @@ class TargetMarkets extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria;
 
-		$criteria->compare('file_id',$this->file_id,true);
-		$criteria->compare('target_market',$this->target_market,true);
+		$criteria->compare('file_id', $this->file_id, true);
+		$criteria->compare('target_market', $this->target_market, true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
@@ -92,8 +93,9 @@ class TargetMarkets extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return TargetMarkets the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
+
 }

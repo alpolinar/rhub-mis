@@ -14,6 +14,7 @@
  */
 class User extends CActiveRecord
 {
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -31,10 +32,10 @@ class User extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('username, password, email', 'required'),
-			array('username, password, email', 'length', 'max'=>128),
+			array('username, password, email', 'length', 'max' => 128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, username, password, email', 'safe', 'on'=>'search'),
+			array('id, username, password, email', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -79,15 +80,15 @@ class User extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('id', $this->id, true);
+		$criteria->compare('username', $this->username, true);
+		$criteria->compare('password', $this->password, true);
+		$criteria->compare('email', $this->email, true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
@@ -97,8 +98,9 @@ class User extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return User the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
+
 }
