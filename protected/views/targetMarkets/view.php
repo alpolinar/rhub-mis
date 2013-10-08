@@ -4,7 +4,7 @@
 
 $this->breadcrumbs = array(
 	'Target Markets' => array('index'),
-	$model->id,
+	$model->name,
 );
 
 $this->menu = array(
@@ -22,6 +22,10 @@ $this->menu = array(
 $this->widget('zii.widgets.CDetailView', array(
 	'data' => $model,
 	'attributes' => array(
+		'name',
+		'description',
+		'start',
+		'end',
 		'targetMarkets.target_market',
 	),
 ));

@@ -51,6 +51,7 @@ class Files extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('name', 'uniqueName'),
 			array('file_type_id, updated, user_id, name', 'required'),
 			array('file_type_id', 'length', 'max' => 20),
 			array('name', 'length', 'max' => 70),
@@ -156,5 +157,12 @@ class Files extends CActiveRecord
 		
 		$this->updated = date("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']);
 		return parent::beforeValidate();
+	}
+	
+	public function uniqueName($attribute, $params) {
+		$data = $this->find('name = :name', array(':name' => $this->name));
+		if (NULL !== $data) {
+			$this->addError('name', 'The file name is already in use.');
+		}
 	}
 }
