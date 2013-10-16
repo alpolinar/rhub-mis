@@ -22,15 +22,51 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model, 'file_id'); ?>
-		<?php echo $form->textField($model, 'file_id', array('size' => 20, 'maxlength' => 20)); ?>
-		<?php echo $form->error($model, 'file_id'); ?>
+		<?php echo $form->labelEx($model, 'file_type_id'); ?>
+		<?php echo $form->textField($model, 'file_type_id', array('size' => 20, 'maxlength' => 20)); ?>
+		<?php echo $form->error($model, 'file_type_id'); ?>
+	</div>
+	
+	<div class="row">
+		<?php echo $form->labelEx($model, 'name'); ?>
+		<?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 70)); ?>
+		<?php echo $form->error($model, 'name'); ?>
+	</div>
+	
+	<div class="row">
+		<?php echo $form->labelEx($model, 'description'); ?>
+		<?php echo $form->textArea($model, 'description', array('rows' => 6, 'cols' => 50)); ?>
+		<?php echo $form->error($model, 'description'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model, 'value_propositions'); ?>
-		<?php echo $form->textArea($model, 'value_propositions', array('rows' => 6, 'cols' => 50)); ?>
-		<?php echo $form->error($model, 'value_propositions'); ?>
+		<?php echo $form->labelEx($model, 'start'); ?>
+		<?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+			'attribute' => 'start',
+			'model' => $model,
+			'options' => array(
+				'dateFormat' => 'yy-mm-dd'
+			)
+		)); ?>
+		<?php echo $form->error($model, 'start'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model, 'end'); ?>
+		<?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+			'attribute' => 'end',
+			'model' => $model,
+			'options' => array(
+				'dateFormat' => 'yy-mm-dd'
+			)
+		)); ?>
+		<?php echo $form->error($model, 'end'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model->businessComponents, 'value_propositions'); ?>
+		<?php echo $form->textArea($model->businessComponents, 'value_propositions', array('rows' => 6, 'cols' => 50)); ?>
+		<?php echo $form->error($model->businessComponents, 'value_propositions'); ?>
 	</div>
 
 	<div class="row buttons">

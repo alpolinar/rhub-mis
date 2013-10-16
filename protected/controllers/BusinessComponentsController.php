@@ -65,15 +65,22 @@ class BusinessComponentsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new BusinessComponents;
-
+		//$model = new BusinessComponents;
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+/*
 		if (isset($_POST['BusinessComponents'])) {
 			$model->attributes = $_POST['BusinessComponents'];
 			if ($model->save())
 				$this->redirect(array('view', 'id' => $model->file_id));
+		}
+*/
+		$model = $this->loadModel();
+		
+		if(isset($_POST['BusinessComponents'])){
+			if($this->saveModel($model))
+				$this->redirect(array('view','id' => $model->id));
 		}
 
 		$this->render('create', array(
@@ -93,15 +100,22 @@ class BusinessComponentsController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+		/*
 		if (isset($_POST['BusinessComponents'])) {
-			$model->attributes = $_POST['BusinessComponents'];
-			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->file_id));
+					$model->attributes = $_POST['BusinessComponents'];
+					if ($model->save())
+						$this->redirect(array('view', 'id' => $model->file_id));
+				}
+		
+				$this->render('update', array(
+					'model' => $model,
+				));*/
+		if(isset($_POST['Files'], $_POST['BusinessComponents'])){
+			if($this->saveModel($model))
+				$this->redirect(array('view', 'id' => $model->id));
 		}
-
-		$this->render('update', array(
-			'model' => $model,
-		));
+		
+		$this->render('udpate', array('model' => $model));
 	}
 
 	/**
@@ -123,7 +137,22 @@ class BusinessComponentsController extends Controller
 	 */
 	public function actionIndex()
 	{
+/*
 		$dataProvider = new CActiveDataProvider('BusinessComponents');
+		$this->render('index', array(
+			'dataProvider' => $dataProvider,
+		));*/
+		
+		$dataProvider = new CActiveDataProvider('Files', array(
+			'criteria' => array(
+				'condition' => 'file_type_id = :file_type_id',
+				'params' => array(':file_type_id' => Files::FILE_TYPE_BUSINESS_COMPONENT)
+			),
+			'countCriteria' => array(
+				'condition' => 'file_type_id = :file_type_id',
+				'params' => array(':file_type_id' => Files::FILE_TYPE_BUSINESS_COMPONENT)
+			)
+		));
 		$this->render('index', array(
 			'dataProvider' => $dataProvider,
 		));
@@ -143,22 +172,7 @@ class BusinessComponentsController extends Controller
 			'model' => $model,
 		));
 	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return BusinessComponents the loaded model
-	 * @throws CHttpException
-	 */
-	public function loadModel($id)
-	{
-		$model = BusinessComponents::model()->findByPk($id);
-		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
-		return $model;
-	}
-
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param BusinessComponents $model the model to be validated
@@ -171,4 +185,59 @@ class BusinessComponentsController extends Controller
 		}
 	}
 
+	/**
+	 * Returns the data model based on the primary key given in the GET variable.
+	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer $id the ID of the model to be loaded
+	 * @return BusinessComponents the loaded model
+	 * @throws CHttpException
+	 */
+	public function loadModel($id = NULL)
+	{
+		/*
+		$model = BusinessComponents::model()->findByPk($id);
+				if ($model === null)
+					throw new CHttpException(404, 'The requested page does not exist.');
+				return $model;*/
+				
+		$model = NULL;
+		if ($id === NULL) {
+			$model = new Files;
+		} else {
+			$model = Files::model()->findByPk($id); /* @var $model Files */
+			if (NULL === $model) {
+				throw new CHttpException(404, 'File does not exist');
+			} else {
+				if (Files::FILE_TYPE_BUSINESS_COMPONENT === $model->file_type_id)
+					throw new CHttpException(505, 'Invalid parameter');
+			}
+		}
+		
+		if (NULL === $model->businessComponents)
+			$model->businessComponents = new BusinessComponents;
+		
+		return $model;
+	}
+	
+	public function saveModel($model) {
+		$model->attributes = $_POST['Files'];
+		$model->file_type_id = Files::FILE_TYPE_BUSINESS_COMPONENT;
+		$model->businessComponents->attributes = $_POST['BusinessComponents'];
+		$transaction = Yii::app()->db->beginTransaction();
+		
+		try {
+			if ($model->save()) {
+				$model->businessComponents->file_id = $model->id;
+				if ($model->businessComponents->save()) {
+					$transaction->commit();
+					return true;
+				}
+			}
+		} catch (CDbException $e) {
+			$transaction->rollback();
+			throw $e;
+		}
+		$transaction->rollback();
+		return false;
+	}
 }
