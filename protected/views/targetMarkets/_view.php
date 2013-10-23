@@ -13,4 +13,8 @@
 	<?php echo CHtml::encode($data->name); ?>
 	<br />
 	
+	<b><?php echo CHtml::encode($data->getAttributeLabel('targetMarkets.target_market')); ?>:</b>
+	<?php echo CHtml::encode($data->targetMarkets->target_market); ?>
+	<br />
+	
 </div>

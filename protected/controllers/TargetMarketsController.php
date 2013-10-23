@@ -163,7 +163,7 @@ class TargetMarketsController extends Controller
 	public function loadModel($id = NULL)
 	{
 		$model = NULL;
-		if ($id === NULL) {
+		if (NULL === $id) {
 			$model = new Files;
 		} else {
 			$model = Files::model()->findByPk($id); /* @var $model Files */
