@@ -91,7 +91,7 @@ class TargetMarketsController extends Controller
 
 		if (isset($_POST['Files'],$_POST['TargetMarkets'])) {
 			if ($this->saveModel($model))
-				$this->redirect(array('view', 'id' => $model->id));
+				$this->redirect(array('view', 'id' => $model->file_id));
 		}
 
 		$this->render('update', array(
