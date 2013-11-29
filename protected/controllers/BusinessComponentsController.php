@@ -43,17 +43,7 @@ class BusinessComponentsController extends Controller {
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate() {
-		//$model = new BusinessComponents;
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
 
-		/*
-		 if (isset($_POST['BusinessComponents'])) {
-		 $model->attributes = $_POST['BusinessComponents'];
-		 if ($model->save())
-		 $this->redirect(array('view', 'id' => $model->file_id));
-		 }
-		 */
 		$model = $this -> loadModel();
 
 		if (isset($_POST['BusinessComponents'])) {
