@@ -61,7 +61,7 @@ class BusinessComponentsController extends Controller {
 	 */
 	public function actionUpdate($id) {
 		$model = $this -> loadModel($id);
-
+		
 		if (isset($_POST['Files'], $_POST['BusinessComponents'])) {
 			if ($this -> saveModel($model))
 				$this -> redirect(array('view', 'id' => $model -> id));
@@ -151,6 +151,12 @@ class BusinessComponentsController extends Controller {
 		return $model;
 	}
 
+	/**
+	 * 
+	 * @param Files $model
+	 * @return boolean
+	 * @throws CDbException
+	 */
 	public function saveModel($model) {
 		$model -> attributes = $_POST['Files'];
 		$model -> file_type_id = Files::FILE_TYPE_BUSINESS_COMPONENT;
