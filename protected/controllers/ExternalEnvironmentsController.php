@@ -68,18 +68,18 @@ class ExternalEnvironmentsController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-/*
-		if (isset($_POST['ExternalEnvironments'])) {
-			$model->attributes = $_POST['ExternalEnvironments'];
-			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->file_id));
-		}*/
-		
-		$model = $this -> loadModel();
+		/*
+		  if (isset($_POST['ExternalEnvironments'])) {
+		  $model->attributes = $_POST['ExternalEnvironments'];
+		  if ($model->save())
+		  $this->redirect(array('view', 'id' => $model->file_id));
+		  } */
+
+		$model = $this->loadModel();
 
 		if (isset($_POST['ExternalEnvironments'])) {
-			if ($this -> saveModel($model))
-				$this -> redirect(array('view', 'id' => $model -> id));
+			if ($this->saveModel($model))
+				$this->redirect(array('view', 'id' => $model->id));
 		}
 
 		$this->render('create', array(
@@ -95,24 +95,23 @@ class ExternalEnvironmentsController extends Controller
 	public function actionUpdate($id)
 	{
 		// $model = $this->loadModel($id);
-
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		/*
-		if (isset($_POST['ExternalEnvironments'])) {
-					$model->attributes = $_POST['ExternalEnvironments'];
-					if ($model->save())
-						$this->redirect(array('view', 'id' => $model->file_id));
-				}*/
-		
-		$model = $this -> loadModel($id);
-		
+		  if (isset($_POST['ExternalEnvironments'])) {
+		  $model->attributes = $_POST['ExternalEnvironments'];
+		  if ($model->save())
+		  $this->redirect(array('view', 'id' => $model->file_id));
+		  } */
+
+		$model = $this->loadModel($id);
+
 		if (isset($_POST['Files'], $_POST['ExternalEnvironments'])) {
-			if ($this -> saveModel($model))
-				$this -> redirect(array('view', 'id' => $model -> id));
+			if ($this->saveModel($model))
+				$this->redirect(array('view', 'id' => $model->id));
 		}
-		
+
 		$this->render('update', array(
 			'model' => $model,
 		));
@@ -137,23 +136,13 @@ class ExternalEnvironmentsController extends Controller
 	 */
 	public function actionIndex()
 	{
-/*
-		$dataProvider = new CActiveDataProvider('ExternalEnvironments');
-		$this->render('index', array(
-			'dataProvider' => $dataProvider,
-		));*/
-		
 		$dataProvider = new CActiveDataProvider('Files', array(
 			'criteria' => array(
-				'condition' => 'file_type_id = :file_type_id', 
+				'condition' => 'file_type_id = :file_type_id',
 				'params' => array(':file_type_id' => Files::FILE_TYPE_EXTERNAL_ENVIRONMENT)
 			),
-			'countCriteria' => array(
-			'condition' => 'file_type_id = :file_type_id',
-				'params' => array(':file_type_id' => Files::FILE_TYPE_EXTERNAL_ENVIRONMENT)
-			)
 		));
-		$this -> render('index', array('dataProvider' => $dataProvider, ));
+		$this->render('index', array('dataProvider' => $dataProvider,));
 	}
 
 	/**
@@ -180,50 +169,50 @@ class ExternalEnvironmentsController extends Controller
 	 */
 	public function loadModel($id = NULL)
 	{
-/*
-		$model = ExternalEnvironments::model()->findByPk($id);
-		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
-		return $model;*/
-		
 		$model = NULL;
 		if ($id === NULL) {
 			$model = new Files;
 		} else {
-			$model = Files::model() -> findByPk($id);
+			$model = Files::model()->findByPk($id);
 			if (NULL === $model) {
 				throw new CHttpException(404, 'File does not exist');
 			} else {
-				if (Files::FILE_TYPE_EXTERNAL_ENVIRONMENT === $model -> file_type_id)
+				if (Files::FILE_TYPE_EXTERNAL_ENVIRONMENT === $model->file_type_id)
 					throw new CHttpException(505, 'Invalid parameter');
 			}
 		}
 
-		if (NULL === $model -> externalEnvironments)
-			$model -> externalEnvironments = new ExternalEnvironments;
+		if (NULL === $model->externalEnvironments)
+			$model->externalEnvironments = new ExternalEnvironments;
 
 		return $model;
 	}
-	
-	public function saveModel($model){
-		$model -> attributes = $_POST['Files'];
-		$model -> file_type_id = Files::FILE_TYPE_EXTERNAL_ENVIRONMENT;
-		$model -> externalEnvironments -> attributes = $_POST['ExternalEnvironments'];
-		$transaction = Yii::app() -> db -> beginTransaction();
 
+	/**
+	 * 
+	 * @param Files $model
+	 * @return boolean
+	 * @throws CDbException
+	 */
+	public function saveModel($model)
+	{
+		$model->attributes = $_POST['Files'];
+		$model->file_type_id = Files::FILE_TYPE_EXTERNAL_ENVIRONMENT;
+		$model->externalEnvironments->attributes = $_POST['ExternalEnvironments'];
+		$transaction = Yii::app()->db->beginTransaction();
 		try {
-			if ($model -> save()) {
-				$model -> externalEnvironments -> file_id = $model -> id;
-				if ($model -> externalEnvironments -> save()) {
-					$transaction -> commit();
+			if ($model->save()) {
+				$model->externalEnvironments->file_id = $model->id;
+				if ($model->externalEnvironments->save()) {
+					$transaction->commit();
 					return true;
 				}
 			}
 		} catch (CDbException $e) {
-			$transaction -> rollback();
+			$transaction->rollback();
 			throw $e;
 		}
-		$transaction -> rollback();
+		$transaction->rollback();
 		return false;
 	}
 
@@ -233,12 +222,10 @@ class ExternalEnvironmentsController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'external-environments-form') {
-					echo CActiveForm::validate($model);
-					Yii::app()->end();
-				}
-		
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
 	}
 
 }
