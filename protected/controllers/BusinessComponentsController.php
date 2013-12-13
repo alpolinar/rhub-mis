@@ -87,19 +87,9 @@ class BusinessComponentsController extends Controller {
 	 * Lists all models.
 	 */
 	public function actionIndex() {
-		/*
-		 $dataProvider = new CActiveDataProvider('BusinessComponents');
-		 $this->render('index', array(
-		 'dataProvider' => $dataProvider,
-		 ));*/
-
 		$dataProvider = new CActiveDataProvider('Files', array(
 			'criteria' => array(
 				'condition' => 'file_type_id = :file_type_id', 
-				'params' => array(':file_type_id' => Files::FILE_TYPE_BUSINESS_COMPONENT)
-			),
-			'countCriteria' => array(
-			'condition' => 'file_type_id = :file_type_id',
 				'params' => array(':file_type_id' => Files::FILE_TYPE_BUSINESS_COMPONENT)
 			)
 		));

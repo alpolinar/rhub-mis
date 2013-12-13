@@ -20,12 +20,6 @@
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model, 'file_type_id'); ?>
-		<?php echo $form->textField($model, 'file_type_id', array('size' => 20, 'maxlength' => 20)); ?>
-		<?php echo $form->error($model, 'file_type_id'); ?>
-	</div>
 	
 	<div class="row">
 		<?php echo $form->labelEx($model, 'name'); ?>

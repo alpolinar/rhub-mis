@@ -123,10 +123,6 @@ class TargetMarketsController extends Controller
 				'condition' => 'file_type_id = :file_type_id',
 				'params' => array(':file_type_id' => Files::FILE_TYPE_TARGET_MARKETS)
 			),
-			'countCriteria' => array(
-				'condition' => 'file_type_id = :file_type_id',
-				'params' => array(':file_type_id' => Files::FILE_TYPE_TARGET_MARKETS)
-			)
 		));
 		$this->render('index', array(
 			'dataProvider' => $dataProvider,

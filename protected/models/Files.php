@@ -51,7 +51,7 @@ class Files extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'uniqueName'),
+			array('name', 'unique'),
 			array('file_type_id, updated, user_id, name', 'required'),
 			array('file_type_id', 'length', 'max' => 20),
 			array('name', 'length', 'max' => 70),
