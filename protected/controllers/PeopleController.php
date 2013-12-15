@@ -63,17 +63,12 @@ class PeopleController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new People;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$model = $this -> loadModel();
 
 		if (isset($_POST['People'])) {
-			$model->attributes = $_POST['People'];
-			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->file_id));
+			if ($this -> saveModel($model))
+				$this -> redirect(array('view', 'id' => $model -> id));
 		}
-
 		$this->render('create', array(
 			'model' => $model,
 		));
@@ -86,16 +81,13 @@ class PeopleController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model = $this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if (isset($_POST['People'])) {
-			$model->attributes = $_POST['People'];
-			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->file_id));
+		$model = $this -> loadModel($id);
+		
+		if (isset($_POST['Files'], $_POST['People'])) {
+			if ($this -> saveModel($model))
+				$this -> redirect(array('view', 'id' => $model -> id));
 		}
+
 
 		$this->render('update', array(
 			'model' => $model,
@@ -121,10 +113,13 @@ class PeopleController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider = new CActiveDataProvider('People');
-		$this->render('index', array(
-			'dataProvider' => $dataProvider,
+		$dataProvider = new CActiveDataProvider('Files', array(
+			'criteria' => array(
+				'condition' => 'file_type_id = :file_type_id', 
+				'params' => array(':file_type_id' => Files::FILE_TYPE_PEOPLE)
+			)
 		));
+		$this -> render('index', array('dataProvider' => $dataProvider, ));
 	}
 
 	/**
@@ -149,12 +144,47 @@ class PeopleController extends Controller
 	 * @return People the loaded model
 	 * @throws CHttpException
 	 */
-	public function loadModel($id)
+	public function loadModel($id = NULL)
 	{
-		$model = People::model()->findByPk($id);
-		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
+		$model = NULL;
+		if ($id === NULL) {
+			$model = new Files;
+		} else {
+			$model = Files::model() -> findByPk($id);
+			if (NULL === $model) {
+				throw new CHttpException(404, 'File does not exist');
+			} else {
+				if (Files::FILE_TYPE_PEOPLE === $model -> file_type_id)
+					throw new CHttpException(505, 'Invalid parameter');
+			}
+		}
+
+		if (NULL === $model -> people)
+			$model -> people = new People;
+
 		return $model;
+	}
+	
+	public function saveModel($model) {
+		$model -> attributes = $_POST['Files'];
+		$model -> file_type_id = Files::FILE_TYPE_PEOPLE;
+		$model -> people -> attributes = $_POST['People'];
+		$transaction = Yii::app() -> db -> beginTransaction();
+
+		try {
+			if ($model -> save()) {
+				$model -> people -> file_id = $model -> id;
+				if ($model -> people -> save()) {
+					$transaction -> commit();
+					return true;
+				}
+			}
+		} catch (CDbException $e) {
+			$transaction -> rollback();
+			throw $e;
+		}
+		$transaction -> rollback();
+		return false;
 	}
 
 	/**
