@@ -15,7 +15,6 @@
  */
 class Tags extends CActiveRecord
 {
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -33,11 +32,11 @@ class Tags extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('tag_type_id, tag', 'required'),
-			array('tag_type_id', 'length', 'max' => 20),
-			array('tag', 'length', 'max' => 100),
+			array('tag_type_id', 'length', 'max'=>20),
+			array('tag', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tag_type_id, tag', 'safe', 'on' => 'search'),
+			array('id, tag_type_id, tag', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -83,14 +82,14 @@ class Tags extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria = new CDbCriteria;
+		$criteria=new CDbCriteria;
 
-		$criteria->compare('id', $this->id, true);
-		$criteria->compare('tag_type_id', $this->tag_type_id, true);
-		$criteria->compare('tag', $this->tag, true);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('tag_type_id',$this->tag_type_id,true);
+		$criteria->compare('tag',$this->tag,true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
+			'criteria'=>$criteria,
 		));
 	}
 
@@ -100,9 +99,8 @@ class Tags extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return Tags the static model class
 	 */
-	public static function model($className = __CLASS__)
+	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
 }

@@ -18,7 +18,6 @@
  */
 class People extends CActiveRecord
 {
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -36,16 +35,16 @@ class People extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('file_id, population, age_start, age_end, zip_code', 'required'),
-			array('age_start, age_end', 'numerical', 'integerOnly' => true),
+			array('age_start, age_end', 'numerical', 'integerOnly'=>true),
 			array('population', 'numerical'),
-			array('file_id', 'length', 'max' => 20),
-			array('country', 'length', 'max' => 2),
-			array('state', 'length', 'max' => 5),
-			array('city', 'length', 'max' => 60),
-			array('zip_code', 'length', 'max' => 10),
+			array('file_id', 'length', 'max'=>20),
+			array('country', 'length', 'max'=>2),
+			array('state', 'length', 'max'=>5),
+			array('city', 'length', 'max'=>60),
+			array('zip_code', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('file_id, population, age_start, age_end, country, state, city, zip_code', 'safe', 'on' => 'search'),
+			array('file_id, population, age_start, age_end, country, state, city, zip_code', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,19 +93,19 @@ class People extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria = new CDbCriteria;
+		$criteria=new CDbCriteria;
 
-		$criteria->compare('file_id', $this->file_id, true);
-		$criteria->compare('population', $this->population);
-		$criteria->compare('age_start', $this->age_start);
-		$criteria->compare('age_end', $this->age_end);
-		$criteria->compare('country', $this->country, true);
-		$criteria->compare('state', $this->state, true);
-		$criteria->compare('city', $this->city, true);
-		$criteria->compare('zip_code', $this->zip_code, true);
+		$criteria->compare('file_id',$this->file_id,true);
+		$criteria->compare('population',$this->population);
+		$criteria->compare('age_start',$this->age_start);
+		$criteria->compare('age_end',$this->age_end);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('state',$this->state,true);
+		$criteria->compare('city',$this->city,true);
+		$criteria->compare('zip_code',$this->zip_code,true);
 
 		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
+			'criteria'=>$criteria,
 		));
 	}
 
@@ -116,9 +115,8 @@ class People extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return People the static model class
 	 */
-	public static function model($className = __CLASS__)
+	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
 }
